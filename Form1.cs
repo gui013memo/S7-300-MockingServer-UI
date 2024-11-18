@@ -7,7 +7,7 @@ namespace S7_300_MockingServer_UI
     public partial class Form1 : Form
     {
 
-
+        MaxwellForm maxForm = new MaxwellForm();
 
         static byte[] response = new byte[]
             {
@@ -389,6 +389,11 @@ namespace S7_300_MockingServer_UI
         {
             //response[27] = (byte)'1';
             UpdateValue(27, '1');
+        }
+
+        private void label1_DoubleClick(object sender, EventArgs e)
+        {
+            maxForm.Show();
         }
     }
 }

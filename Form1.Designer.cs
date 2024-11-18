@@ -67,6 +67,7 @@
             label1.Size = new Size(182, 32);
             label1.TabIndex = 2;
             label1.Text = "Engine Number";
+            label1.DoubleClick += label1_DoubleClick;
             // 
             // label2
             // 
