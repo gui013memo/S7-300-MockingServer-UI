@@ -11,23 +11,28 @@ namespace S7_300_MockingServer_UI
 
         static byte[] response = new byte[]
             {
-                0x03, 0x00, 0x00, 0xE1, // TPKT Header (Length: 225 bytes)
-                0x02, 0xF0, 0x80,       // ISO Header
-                0x32, 0x03, 0x00, 0x00, // S7Comm Header with Return Code
-                0x05, 0x00, 0x00, 0x02, 0x00, // Sequence Length + Reserved
-                0xCC, 0x00, 0x00, 0x04, 0x01, 0xFF, 0x04, 0x06, // Header Info
-                0x40, // Header Reference Data
-                
-                //1   //B   //0                                 //Start of S7 Payload
-                0x31, 0x42, 0x30,
-                0x30, 0x30, // Dummy
-                0x30, 0x30, // Work Complete and Work Result 
-                0x30, 0x30, 0x30,//Dummy
+                /* Headers */
 
-                0x42, 0x42, 0x34, 0x31, // B B 4 1
-                0x46, 0x33, 0x4C, 0x41, 0x51, 0x4C, //F3LAQL
-                0x31, 0x32, 0x33, //123
-                0x34, 0x35, 0x36, //456
+                0x03, 0x00, 0x00, 0xE1,                         // TPKT Header (Length: 225 bytes)
+                0x02, 0xF0, 0x80,                               // ISO Header
+                0x32, 0x03, 0x00, 0x00,                         // S7Comm Header with Return Code
+                0x05, 0x00, 0x00, 0x02, 0x00,                   // Sequence Length + Reserved
+                0xCC, 0x00, 0x00, 0x04, 0x01, 0xFF, 0x04, 0x06, // Header Info
+                0x40,                                           // Header Reference Data
+                
+
+                /* S7 Payload */
+
+                //1   //B                   //0 <- ReadRequest FLAG                                 
+                0x31, 0x42, /*byte 27 -> */ 0x30,               // HeartBit, Assy Type, ReadRequest
+                0x30, 0x30,                                     // Dummy
+                0x30, 0x30,                                     // Work Complete and Work Result 
+                0x30, 0x30, 0x30,                               // Dummy
+
+                0x42, 0x42, 0x34, 0x31,                         // B B 4 1
+                0x46, 0x33, 0x4C, 0x41, 0x51, 0x4C,             // F3LAQL
+                0x31, 0x32, 0x33,                               // 123
+                0x34, 0x35, 0x36,                               // 456
                 
                 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x30, 0x30, 0x30, 0x30, 0x30,
@@ -66,11 +71,10 @@ namespace S7_300_MockingServer_UI
 
             if (addressOffset < 0 || addressOffset >= response.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(addressOffset), "Address offset out of range.");
+                MessageBox.Show($"Address offset out of range...");
             }
             response[addressOffset] = newValueChar;
         }
-
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -130,7 +134,7 @@ namespace S7_300_MockingServer_UI
             }
             finally
             {
-                listener.Close(); // Ensure listener is closed
+                listener.Close();
                 Debug.WriteLine("Server socket closed.");
             }
         }
@@ -146,7 +150,7 @@ namespace S7_300_MockingServer_UI
                 {
                     int bytesRead = clientSocket.Receive(buffer);
                     if (bytesRead == 0)
-                        break; // Connection closed by client
+                        break;
 
                     Debug.WriteLine("Ping packet received, sending TCP ACK.");
                 }
@@ -193,7 +197,7 @@ namespace S7_300_MockingServer_UI
                     {
                         Debug.WriteLine("Read SZL Request identified.");
                         byte[] szlResponse = CreateReadSZLResponse();
-                        //Thread.Sleep(30); // Minor delay
+                        //Thread.Sleep(30); 
                         clientSocket.Send(szlResponse);
                         Debug.WriteLine("Sent SZL Response.");
                     }
@@ -201,7 +205,7 @@ namespace S7_300_MockingServer_UI
                     {
                         Debug.WriteLine("Read DB180 Request identified.");
                         byte[] readResponse = CreateS7ReadResponse();
-                        Thread.Sleep(1000); // Minor delay
+                        Thread.Sleep(1000);
                         clientSocket.Send(readResponse);
                         Debug.WriteLine("Sent DB180 Read Response.");
                     }
@@ -217,19 +221,16 @@ namespace S7_300_MockingServer_UI
                         else
                         {
                             Debug.WriteLine("Write DB180 for HeartBit RESET identified.");
+                            //byte[] readResponse = CreateS7ReadResponse();
+                            Thread.Sleep(1000);
+                            //clientSocket.Send(readResponse);
+                            //Debug.WriteLine("Sent DB180 Read Response.");
                         }
-
-
-                        //byte[] readResponse = CreateS7ReadResponse();
-                        Thread.Sleep(1000); // Minor delay
-                        //clientSocket.Send(readResponse);
-                        //Debug.WriteLine("Sent DB180 Read Response.");
                     }
                     else if (IsCPUFunctionRequest(buffer))
                     {
                         Debug.WriteLine("CPU Function Read Request identified.");
                         byte[] cpuResponse = CreateCPUFunctionResponse();
-                        //Thread.Sleep(30); // Minor delay
                         clientSocket.Send(cpuResponse);
                         Debug.WriteLine("Sent CPU Function Response.");
                     }
@@ -394,6 +395,20 @@ namespace S7_300_MockingServer_UI
         private void label1_DoubleClick(object sender, EventArgs e)
         {
             maxForm.Show();
+        }
+
+        private void blockAssyCheckBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            UpdateValue(26, 'B');
+            blockAssyCheckBox.Checked = true;
+            headAssyCheckBox.Checked = false;
+        }
+
+        private void headAssyCheckBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            UpdateValue(26, 'H');
+            blockAssyCheckBox.Checked = false;
+            headAssyCheckBox.Checked = true;
         }
     }
 }

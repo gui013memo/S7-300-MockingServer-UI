@@ -32,8 +32,8 @@
             textBox1 = new TextBox();
             label1 = new Label();
             label2 = new Label();
-            checkBox1 = new CheckBox();
-            checkBox2 = new CheckBox();
+            blockAssyCheckBox = new CheckBox();
+            headAssyCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // setReadRequestButton
@@ -79,35 +79,39 @@
             label2.TabIndex = 4;
             label2.Text = "Assembly Type";
             // 
-            // checkBox1
+            // blockAssyCheckBox
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point);
-            checkBox1.Location = new Point(42, 126);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(84, 34);
-            checkBox1.TabIndex = 5;
-            checkBox1.Text = "Block";
-            checkBox1.UseVisualStyleBackColor = true;
+            blockAssyCheckBox.AutoSize = true;
+            blockAssyCheckBox.Checked = true;
+            blockAssyCheckBox.CheckState = CheckState.Checked;
+            blockAssyCheckBox.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point);
+            blockAssyCheckBox.Location = new Point(42, 126);
+            blockAssyCheckBox.Name = "blockAssyCheckBox";
+            blockAssyCheckBox.Size = new Size(84, 34);
+            blockAssyCheckBox.TabIndex = 5;
+            blockAssyCheckBox.Text = "Block";
+            blockAssyCheckBox.UseVisualStyleBackColor = true;
+            blockAssyCheckBox.MouseClick += blockAssyCheckBox_MouseClick;
             // 
-            // checkBox2
+            // headAssyCheckBox
             // 
-            checkBox2.AutoSize = true;
-            checkBox2.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point);
-            checkBox2.Location = new Point(172, 126);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(84, 34);
-            checkBox2.TabIndex = 6;
-            checkBox2.Text = "Head";
-            checkBox2.UseVisualStyleBackColor = true;
+            headAssyCheckBox.AutoSize = true;
+            headAssyCheckBox.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point);
+            headAssyCheckBox.Location = new Point(172, 126);
+            headAssyCheckBox.Name = "headAssyCheckBox";
+            headAssyCheckBox.Size = new Size(84, 34);
+            headAssyCheckBox.TabIndex = 6;
+            headAssyCheckBox.Text = "Head";
+            headAssyCheckBox.UseVisualStyleBackColor = true;
+            headAssyCheckBox.MouseClick += headAssyCheckBox_MouseClick;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(288, 245);
-            Controls.Add(checkBox2);
-            Controls.Add(checkBox1);
+            Controls.Add(headAssyCheckBox);
+            Controls.Add(blockAssyCheckBox);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(textBox1);
@@ -125,7 +129,7 @@
         private TextBox textBox1;
         private Label label1;
         private Label label2;
-        private CheckBox checkBox1;
-        private CheckBox checkBox2;
+        private CheckBox blockAssyCheckBox;
+        private CheckBox headAssyCheckBox;
     }
 }
