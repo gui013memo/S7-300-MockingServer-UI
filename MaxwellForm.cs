@@ -1,52 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using NAudio.Wave;
-using System.IO;
 
 namespace S7_300_MockingServer_UI
 {
     public partial class MaxwellForm : Form
     {
-
         private IWavePlayer waveOutDevice;
-        private Stream mediaStream;
+        private AudioFileReader audioReader;
 
         public MaxwellForm()
         {
-
             InitializeComponent();
         }
 
         private void MaxwellForm_Load(object sender, EventArgs e)
         {
-            PlayAudioFromResources();
+            
         }
 
-        private void PlayAudioFromResources()
+        private void PlayAudioFromProjectFolder()
         {
+            StopAndDisposeAudio(); // Clean up any previous playback
+
             waveOutDevice = new WaveOutEvent();
 
-            // Retrieve the audio stream from resources
-            mediaStream = new MemoryStream(Properties.Resources.maxwell_the_cat_theme); // Assuming this is the correct resource name
-            var mp3Reader = new Mp3FileReader(mediaStream);
-
-            waveOutDevice.Init(mp3Reader);
-            waveOutDevice.Play();
-
-            this.FormClosing += (s, args) =>
+            try
             {
-                waveOutDevice?.Stop();
-                waveOutDevice?.Dispose();
-                mp3Reader?.Dispose();
-                mediaStream?.Dispose();
-            };
+                string audioFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
+                string audioFilePath = Path.Combine(audioFolderPath, "maxwell-the-cat-theme.mp3");
+
+                if (!File.Exists(audioFilePath))
+                {
+                    throw new FileNotFoundException("Audio file not found.", audioFilePath);
+                }
+
+                audioReader = new AudioFileReader(audioFilePath);
+                waveOutDevice.Init(audioReader);
+                waveOutDevice.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error playing audio: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void MaxwellForm_Shown(object sender, EventArgs e)
+        {
+            PlayAudioFromProjectFolder(); // Play audio every time the form is shown
+        }
+
+        private void MaxwellForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true; // Prevent the form from disposing
+            StopAndDisposeAudio(); // Stop audio when form is hidden
+            this.Hide(); // Just hide the form
+        }
+
+        private void StopAndDisposeAudio()
+        {
+            if (waveOutDevice != null)
+            {
+                waveOutDevice.Stop();
+                waveOutDevice.Dispose();
+                waveOutDevice = null;
+            }
+
+            if (audioReader != null)
+            {
+                audioReader.Dispose();
+                audioReader = null;
+            }
+        }
+
+        private void MaxwellForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            StopAndDisposeAudio(); // Ensure resources are cleaned up
         }
     }
 }
