@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             setReadRequestButton = new Button();
-            textBox1 = new TextBox();
+            engineNumberTextBox = new TextBox();
             label1 = new Label();
             label2 = new Label();
             blockAssyCheckBox = new CheckBox();
             headAssyCheckBox = new CheckBox();
+            label3 = new Label();
             SuspendLayout();
             // 
             // setReadRequestButton
@@ -47,22 +48,23 @@
             setReadRequestButton.UseVisualStyleBackColor = true;
             setReadRequestButton.Click += setReadRequestButton_Click;
             // 
-            // textBox1
+            // engineNumberTextBox
             // 
-            textBox1.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            textBox1.Location = new Point(12, 44);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(264, 39);
-            textBox1.TabIndex = 1;
-            textBox1.Text = "BB42F3LAQL123456";
-            textBox1.TextAlign = HorizontalAlignment.Center;
+            engineNumberTextBox.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            engineNumberTextBox.Location = new Point(12, 44);
+            engineNumberTextBox.MaxLength = 16;
+            engineNumberTextBox.Multiline = true;
+            engineNumberTextBox.Name = "engineNumberTextBox";
+            engineNumberTextBox.Size = new Size(264, 39);
+            engineNumberTextBox.TabIndex = 1;
+            engineNumberTextBox.Text = "BB42F3LAQL123456";
+            engineNumberTextBox.TextAlign = HorizontalAlignment.Center;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(58, 9);
+            label1.Location = new Point(12, 9);
             label1.Name = "label1";
             label1.Size = new Size(182, 32);
             label1.TabIndex = 2;
@@ -105,16 +107,27 @@
             headAssyCheckBox.UseVisualStyleBackColor = true;
             headAssyCheckBox.MouseClick += headAssyCheckBox_MouseClick;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label3.Location = new Point(200, 18);
+            label3.Name = "label3";
+            label3.Size = new Size(71, 21);
+            label3.TabIndex = 7;
+            label3.Text = "(Max 16)";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(288, 245);
+            Controls.Add(label3);
             Controls.Add(headAssyCheckBox);
             Controls.Add(blockAssyCheckBox);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(textBox1);
+            Controls.Add(engineNumberTextBox);
             Controls.Add(setReadRequestButton);
             Name = "Form1";
             Text = "S7-300 TMS Mocking Server";
@@ -126,10 +139,11 @@
         #endregion
 
         private Button setReadRequestButton;
-        private TextBox textBox1;
+        private TextBox engineNumberTextBox;
         private Label label1;
         private Label label2;
         private CheckBox blockAssyCheckBox;
         private CheckBox headAssyCheckBox;
+        private Label label3;
     }
 }

@@ -29,7 +29,7 @@ namespace S7_300_MockingServer_UI
                 0x30, 0x30,                                     // Work Complete and Work Result 
                 0x30, 0x30, 0x30,                               // Dummy
 
-                0x42, 0x42, 0x34, 0x31,                         // B B 4 1
+ /*byte 35 -> */0x42, 0x42, 0x34, 0x31,                         // B B 4 1
                 0x46, 0x33, 0x4C, 0x41, 0x51, 0x4C,             // F3LAQL
                 0x31, 0x32, 0x33,                               // 123
                 0x34, 0x35, 0x36,                               // 456
@@ -388,8 +388,24 @@ namespace S7_300_MockingServer_UI
 
         private void setReadRequestButton_Click(object sender, EventArgs e)
         {
-            //response[27] = (byte)'1';
-            UpdateValue(27, '1');
+            response[35] = (byte)engineNumberTextBox.Text[0]; //B
+            response[36] = (byte)engineNumberTextBox.Text[1]; //B
+            response[37] = (byte)engineNumberTextBox.Text[2]; //4
+            response[38] = (byte)engineNumberTextBox.Text[3]; //1
+            response[39] = (byte)engineNumberTextBox.Text[4]; //F
+            response[40] = (byte)engineNumberTextBox.Text[5]; //3
+            response[41] = (byte)engineNumberTextBox.Text[6]; //L
+            response[42] = (byte)engineNumberTextBox.Text[7]; //A
+            response[43] = (byte)engineNumberTextBox.Text[8]; //Q
+            response[44] = (byte)engineNumberTextBox.Text[9]; //L
+            response[45] = (byte)engineNumberTextBox.Text[10]; //1
+            response[46] = (byte)engineNumberTextBox.Text[11]; //2
+            response[47] = (byte)engineNumberTextBox.Text[12]; //3
+            response[48] = (byte)engineNumberTextBox.Text[13]; //4
+            response[49] = (byte)engineNumberTextBox.Text[14]; //5
+            response[50] = (byte)engineNumberTextBox.Text[15]; //6
+
+            UpdateValue(27, '1'); // Set ReadRequest to 1 and login the engine
         }
 
         private void label1_DoubleClick(object sender, EventArgs e)
@@ -410,5 +426,6 @@ namespace S7_300_MockingServer_UI
             blockAssyCheckBox.Checked = false;
             headAssyCheckBox.Checked = true;
         }
+
     }
 }
