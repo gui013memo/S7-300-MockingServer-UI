@@ -1,4 +1,4 @@
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
 
@@ -84,7 +84,7 @@ namespace S7_300_MockingServer_UI
 
         private static void LoopingThread(CancellationToken token)
         {
-            string serverIp = "172.16.0.90";
+            string serverIp = "0.0.0.0";
             int serverPort = 102; // S7Comm standard port
 
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(serverIp), serverPort);
@@ -107,20 +107,11 @@ namespace S7_300_MockingServer_UI
                     if (listener.Poll(1000, SelectMode.SelectRead))
                     {
                         Socket clientSocket = listener.Accept();
-                        connectionCount++;
 
-                        if (connectionCount == 1)
-                        {
-                            Debug.WriteLine("Ping connection received. Only sending TCP ACKs.");
-                            Thread pingThread = new Thread(() => HandlePingConnection(clientSocket));
-                            pingThread.Start();
-                        }
-                        else if (connectionCount == 2)
-                        {
-                            Debug.WriteLine("Real S7Comm connection received.");
-                            Thread clientThread = new Thread(() => HandleRealConnection(clientSocket));
-                            clientThread.Start();
-                        }
+                        Debug.WriteLine("Real S7Comm connection received.");
+                        Thread clientThread = new Thread(() => HandleConnection(clientSocket));
+                        clientThread.Start();
+
                     }
                 }
             }
@@ -140,33 +131,7 @@ namespace S7_300_MockingServer_UI
         }
 
 
-        private static void HandlePingConnection(Socket clientSocket)
-        {
-            try
-            {
-                byte[] buffer = new byte[1024];
-
-                while (true)
-                {
-                    int bytesRead = clientSocket.Receive(buffer);
-                    if (bytesRead == 0)
-                        break;
-
-                    Debug.WriteLine("Ping packet received, sending TCP ACK.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Ping connection error: {ex.Message}");
-            }
-            finally
-            {
-                clientSocket.Close();
-                Debug.WriteLine("Ping connection closed.");
-            }
-        }
-
-        private static void HandleRealConnection(Socket clientSocket)
+        private static void HandleConnection(Socket clientSocket)
         {
             try
             {
